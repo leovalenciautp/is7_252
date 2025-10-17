@@ -7,10 +7,6 @@
 
 open System
 
-[1..1000]
-|> Seq.map ( fun e -> 2*e)
-|> Seq.sum // Reduce
-|> Console.WriteLine
 
 let rec factorial x acumulador =
     if x > 10 then
@@ -44,3 +40,17 @@ let _,n = fibonnacci 5
 //
 // Tarea modificar la funcion para retornar una lista de la sequencia
 // de Fibonnaci
+
+
+let calcularSecuenciaFibonnacci x =
+    [1..(x-2)]
+    |> Seq.fold (fun acc _ ->
+        match acc with 
+        | b :: a :: _ -> a+b :: acc
+        | _ -> acc
+    ) [1;0]
+    |>Seq.rev
+
+
+calcularSecuenciaFibonnacci 10
+|> Seq.iter Console.WriteLine
