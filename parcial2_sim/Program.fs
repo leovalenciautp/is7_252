@@ -86,19 +86,19 @@ let bancos = [
 // En la ultima linea debe imprimir "Saldo Total en Dolares: " e imprimer el equivalente 
 // total en dolares.
 
-let converirADolares moneda valor =
+let convertirADolares moneda valor =
     match moneda with 
     | Dolares -> valor
     | Pesos -> valor/4_000m
     | Euros -> valor*1.18m
 
 bancos
-|> Seq.sortBy (fun r -> converirADolares r.Moneda r.Saldo)
+|> Seq.sortBy (fun r -> convertirADolares r.Moneda r.Saldo)
 |> Seq.rev
 |> Seq.iter (fun r -> printfn $"%-15s{r.Banco} %-15s{r.Moneda.ToString()} %15.0f{r.Saldo}")
 
 bancos
-|> Seq.map (fun r -> converirADolares r.Moneda r.Saldo)
+|> Seq.map (fun r -> convertirADolares r.Moneda r.Saldo)
 |> Seq.sum
 |> fun total -> printfn $"Saldo Total en Dolares: {total}"
 
