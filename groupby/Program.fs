@@ -110,4 +110,6 @@ let baraja = [|
         J pinta //Syntactic sugar
 |]
 
-let nuevaCarta = baraja |> Array.last
+let generador = new Random()
+
+let nuevaCarta = baraja[generador.Next(0,52)]
