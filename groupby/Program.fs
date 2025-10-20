@@ -35,13 +35,6 @@ leoArray
 // Operaciones de lista, consumen mucho menos memoria que arrays
 // pero son muy lentas.
 
-let bigList = [1..2_000_000_000]
-let ultimo = bigList |> List.last
-
-let nuevaLista = 10 :: bigList
-let bigArray = bigList |> List.toArray
-let ultimoArray = bigArray |> Array.last
-
 
 // Nuance
 
@@ -54,8 +47,8 @@ let ultimoArray = bigArray |> Array.last
 // y no depende del tamaño del array
 //
 
-let e = bigArray[1_000_000_000] // Constant time
-let e2 = bigList[1_000_000_000] // O(n)
+// let e = bigArray[1_000_000_000] // Constant time
+// let e2 = bigList[1_000_000_000] // O(n)
 
 //
 //Array, guarda los elementos un solo bloque de memoria
@@ -113,3 +106,16 @@ let baraja = [|
 let generador = new Random()
 
 let nuevaCarta = baraja[generador.Next(0,52)]
+
+let rec generateNewRandoNumber usedNumberList =
+    let number = generador.Next(0,52)
+    match usedNumberList |> List.tryFind (fun e -> e = number) with
+    | None -> 
+        number
+    | Some _ ->
+        generateNewRandoNumber usedNumberList
+
+let getRandomDeck() =
+    [1..52]
+    |> List.fold ( fun acc _ -> generateNewRandoNumber :: acc) []
+
