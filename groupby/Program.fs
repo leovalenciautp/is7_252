@@ -113,10 +113,21 @@ let rec generateNewRandoNumber usedNumberList =
     | Some _ ->
         generateNewRandoNumber usedNumberList
 
+let imprimirCarta (carta:Carta) =
+
+    match carta with
+    | K color -> $"K de {color}"
+    | Q palo -> $"Q de {palo}"
+    | J x -> $"J de {x}"
+    | As palo -> $"As de {palo}"
+    | Numero (x,palo) -> $"El {x} de {palo}"
+    |> Console.WriteLine
+
 let getRandomDeck() =
     [1..52]
     |> List.fold ( fun acc _ -> generateNewRandoNumber acc :: acc) []
 
 getRandomDeck()
-|> Seq.iter Console.WriteLine
+|> Seq.map (fun i -> baraja[i])
+|> Seq.iter imprimirCarta
 
