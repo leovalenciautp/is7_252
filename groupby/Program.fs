@@ -24,8 +24,6 @@ open System
 let lista = [1;2;3]
 let leoArray = [|1;2;3|]
 
-leoArray
-|> Array.iter Console.WriteLine
 
 //
 // Performance -> Rendimiento
