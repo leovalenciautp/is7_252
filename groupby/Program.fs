@@ -117,5 +117,8 @@ let rec generateNewRandoNumber usedNumberList =
 
 let getRandomDeck() =
     [1..52]
-    |> List.fold ( fun acc _ -> generateNewRandoNumber :: acc) []
+    |> List.fold ( fun acc _ -> generateNewRandoNumber acc :: acc) []
+
+getRandomDeck()
+|> Seq.iter Console.WriteLine
 
