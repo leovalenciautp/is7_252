@@ -131,3 +131,44 @@ getRandomDeck()
 |> Seq.map (fun i -> baraja[i])
 |> Seq.iter imprimirCarta
 
+//
+// Cualquier funcion de busqueda de listas, o arrays
+// es secuencial -> O(n)
+//
+
+//
+// 1,2,3,4,5,6,7,8,9,10,11 -> binary search
+
+//
+// Hay que ordernar la lista primero
+// List.sort o List.sortBy -> QuickSort iventando por Tonny Hoare
+// [10,1,8,7,5.3]
+//
+
+
+//
+// Google job interview.
+//
+// Busqueda en constant time.
+// Hash map
+//
+// Hash function
+//
+let miHash (x:string) =
+    //
+    // hace magia con el string
+    // y retorna un int
+    //
+    x.GetHashCode()
+
+let code = miHash "B"
+printfn $"%x{code}"   
+
+//
+// Tarea para el miercoles. Como usar hash functions para
+// crear busquedas en tiempo constante.
+//
+// Bitcoin -> proof of work
+//
+// 1111111111111110b
+
