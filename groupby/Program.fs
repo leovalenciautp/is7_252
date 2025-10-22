@@ -226,4 +226,45 @@ let amigos = [
 
 let index = amigos |> Map.ofList
 
-let nuevaBase = index |> Map.add (432,{Nombre="Santiago";Apodo=Some "WoL"})
+let nuevaBase = index |> Map.add (123,{Nombre="Santiago";Apodo=Some "WoL"})
+
+type Moneda =
+| Euros
+| Dolares
+| Pesos
+
+type Cuenta = {
+    Banco: string
+    Moneda: Moneda
+    Saldo: decimal
+}
+
+let bancos = [
+    {
+        Banco = "Bancolombia"
+        Moneda= Pesos
+        Saldo = 1000m 
+    }
+    {
+        Banco = "Nequi"
+        Moneda = Pesos
+        Saldo = 5000m
+    }
+    {
+        Banco = "Citi"
+        Moneda = Dolares
+        Saldo = 1000m
+    }
+    {
+        Banco = "UBS"
+        Moneda = Euros
+        Saldo = 1000m
+    }
+
+]
+
+let result = bancos |> List.groupBy ( fun e -> e.Moneda) |> Map.ofList
+
+let pesos = result[Pesos] |> List.sumBy (fun e -> e.Saldo)
+let dolares = result[Dolares] |> List.sumBy (fun e -> e.Saldo)
+let euros = result[Euros] |> List.sumBy _.Saldo
