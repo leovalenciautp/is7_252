@@ -105,13 +105,12 @@ let generador = new Random()
 
 let nuevaCarta = baraja[generador.Next(0,52)]
 
-let rec generateNewRandoNumber usedNumberList =
+let rec generateNewRandoNumber usedNumberSet =
     let number = generador.Next(0,52)
-    match usedNumberList |> List.tryFind (fun e -> e = number) with
-    | None -> 
+    if usedNumberSet |> Set.contains number then
+        generateNewRandoNumber usedNumberSet
+    else
         number
-    | Some _ ->
-        generateNewRandoNumber usedNumberList
 
 let imprimirCarta (carta:Carta) =
 
@@ -125,7 +124,7 @@ let imprimirCarta (carta:Carta) =
 
 let getRandomDeck() =
     [1..52]
-    |> List.fold ( fun acc _ -> generateNewRandoNumber acc :: acc) []
+    |> List.fold ( fun acc _ -> acc |> Set.add (generateNewRandoNumber acc) ) ([] |> set)
 
 getRandomDeck()
 |> Seq.map (fun i -> baraja[i])
@@ -161,8 +160,6 @@ let miHash (x:string) =
     //
     x.GetHashCode()
 
-let code = miHash "B"
-printfn $"%x{code}"   
 
 //
 // Tarea para el miercoles. Como usar hash functions para
@@ -172,3 +169,61 @@ printfn $"%x{code}"
 //
 // 1111111111111110b
 
+
+//
+// Nuevas estructuras de Datos
+//
+// Set -> Conjunto, es una colleccion de elementos UNICOS
+// Map (Mapa)
+
+
+//
+// En F# podemos usar dos tipos de Set
+// - Un tipo funcional inmutable llamado Set, esta implementado como un binary tree.
+// - busqueda es O(log(n))
+//
+// Dotnet tiene un Set
+//  Esta implementado con hash functions.
+//  Es un tipo de datos mutable.
+//  La busqueda es O(1)
+
+//
+// Map es una estructura de datos fundamental, en muchos lenguajes se conoce
+// como Dictionary.
+// Es un tipos de datos asociativo, entre un key y un valor.
+// Siempre es un par Key,Value pair
+//
+
+let a = [] |> set
+
+let b = a |> Set.contains 20
+
+let c = a |> Set.add 10
+
+
+let baseDeDatos = [
+    "leov@mail,com","Leonardo Valencia"
+    "sebastian@utp","Sebastian Cardenas"
+    "camila@utp","Camila Franco"
+]
+
+let m = baseDeDatos |> Map.ofList
+
+let nuevaBases = baseDeDatos |> Map.add ("mariana@utp","Mariana Arenas")
+
+type Amigo = {
+    Nombre: string
+    Apodo: string Option
+}
+
+let amigos = [
+    123,
+    {
+        Nombre ="Leonardo"
+        Apodo = None
+    }
+] 
+
+let index = amigos |> Map.ofList
+
+let nuevaBase = index |> Map.add (432,{Nombre="Santiago";Apodo=Some "WoL"})
