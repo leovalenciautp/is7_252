@@ -81,18 +81,17 @@ let convertirADolares moneda valor =
     | Euros -> 1.18m*valor
 
 bancos
-|> Seq.sortBy (fun r -> convertirADolares r.Moneda r.Saldo)
+|> Seq.map (fun r -> r,convertirADolares r.Moneda r.Saldo)
+|> Seq.sortBy (fun (_,s) -> s )
 |> Seq.rev
-|> Seq.iter (fun r -> 
+|> Seq.map (fun (r,s) -> 
     let moneda = 
         match r.Moneda with
         | Pesos -> "COP$"
         | Euros -> "€"
         | Dolares -> "$"
     printfn $"{r.Banco} {moneda}{r.Saldo}"
+    s
 )
-
-bancos
-|> Seq.map ( fun r -> convertirADolares r.Moneda r.Saldo)
 |> Seq.sum
-|> Console.WriteLine
+|> fun total -> printfn $"El total es: ${total}"
