@@ -12,6 +12,11 @@ type ProgramState =
 | Running
 | Terminated
 
+type Misil = {
+    X: int
+    Y: int
+}
+
 type State = {
     Width: int
     Height: int
@@ -20,9 +25,9 @@ type State = {
     Counter: int
     Tick: int
     ProgramState: ProgramState
-    MisilX: int
-    MisilY: int
-    MisilOn: bool
+    Misiles: Misil list
+    EnemyX: int
+    EnemyY: int
 }
 
 let initSate() =
@@ -34,9 +39,9 @@ let initSate() =
         ProgramState = Running
         Counter = 0
         Tick =0
-        MisilX = 0
-        MisilY =0
-        MisilOn = false 
+        Misiles = [] 
+        EnemyX = Console.BufferWidth-10
+        EnemyY = 0
     }
 
 
@@ -67,11 +72,13 @@ let displayCounter state =
     state
 
 let displayMisil state =
-    if state.MisilOn then
-        displayMessage state.MisilX state.MisilY ConsoleColor.Cyan "=>"
-        state
-    else
-        state
+    state.Misiles
+    |> List.iter ( fun m -> displayMessage m.X m.Y ConsoleColor.Cyan "=>")
+    state
+
+let displayEnemy state =
+    displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
+    state
 
 let updateAlienKeyboard key state =
     match key with
@@ -94,10 +101,8 @@ let updateScape key state =
 let udpateMisilKeyboard key state =
     match key with
     | ConsoleKey.Spacebar ->
-        if not state.MisilOn then
-            {state with MisilOn=true;MisilX=state.AlienX+2;MisilY=state.AlienY}
-        else
-            state
+        let nuevoMisil = {X=state.AlienX+2;Y=state.AlienY}
+        {state with Misiles = nuevoMisil :: state.Misiles}
     | _ -> state
 
 let updateKeyboard state =
@@ -115,15 +120,22 @@ let clearAlien state =
     displayMessage state.AlienX state.AlienY ConsoleColor.Yellow "  "
     state
 
+let clearEnemy state =
+    displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "  "
+    state
+
 let clearMisil state =
-    if state.MisilOn then
-        displayMessage state.MisilX state.MisilY ConsoleColor.Cyan "  "
+    state.Misiles
+    |> List.iter (fun m -> 
+        displayMessage m.X m.Y ConsoleColor.Cyan "  "
+    )
     state
 
 let clearOldObjects state =
     state
     |> clearAlien
     |> clearMisil
+    |> clearEnemy
     |> ignore
 
 let updateTick state =
@@ -136,19 +148,22 @@ let updateCounter state =
         state
 
 let updateMisil state =
-    if state.MisilOn then
-        let nuevoX = state.MisilX+1
-        if nuevoX >= state.Width-2 then
-            {state with MisilOn=false}
-        else
-            {state with MisilX = nuevoX}
-    else
-        state
+    let nuevosMisiles =
+        state.Misiles
+        |> Seq.map ( fun m -> {m with X = m.X+1})
+        |> Seq.filter ( fun m -> m.X < state.Width-2)
+        |> Seq.toList
+    { state with Misiles = nuevosMisiles}
+
+let updateEnemy state =
+    let nuevoY = abs (float state.Height/2.0*((Math.Cos state.Counter)-1.0))
+    {state with EnemyY = int nuevoY}
 let updateState state =
     state
     |> updateTick
     |> updateCounter
     |> updateMisil
+    |> updateEnemy
     |> updateKeyboard
 
 let updateScreen state =
@@ -156,6 +171,7 @@ let updateScreen state =
     |> displayCounter 
     |> displayAlien
     |> displayMisil
+    |> displayEnemy
     |> ignore
 
 let rec mainLoop state =
