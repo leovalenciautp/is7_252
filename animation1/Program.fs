@@ -79,7 +79,6 @@ let displayMisil state =
     state
 
 let displayEnemy state =
-    Console.WriteLine state.EnemyY
     displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
     state
 
