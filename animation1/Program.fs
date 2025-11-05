@@ -29,6 +29,7 @@ type State = {
     EnemyX: int
     EnemyY: int
     EnemySpeed: float
+    EnemyVisible: bool
 }
 
 let initSate() =
@@ -44,6 +45,7 @@ let initSate() =
         EnemyX = Console.BufferWidth-10
         EnemyY = 0
         EnemySpeed = Math.PI/50.0
+        EnemyVisible = true
     }
 
 
@@ -79,7 +81,8 @@ let displayMisil state =
     state
 
 let displayEnemy state =
-    displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
+    if state.EnemyVisible then 
+        displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
     state
 
 let updateAlienKeyboard key state =
@@ -123,7 +126,8 @@ let clearAlien state =
     state
 
 let clearEnemy state =
-    displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "  "
+    if state.EnemyVisible then 
+        displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "  "
     state
 
 let clearMisil state =
@@ -160,12 +164,22 @@ let updateMisil state =
 let updateEnemy state =
     let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed) - 1.0)
     {state with EnemyY = min (state.Height-1) (int nuevoY)}
+
+let updateColision state =
+    state.Misiles
+    |> List.filter (fun m -> not (m.X+1=state.EnemyX && m.Y=state.EnemyY))
+    |> fun nuevaLista ->
+        if nuevaLista.Length <> state.Misiles.Length then
+            {state with Misiles=nuevaLista;EnemyVisible=false}
+        else
+            state
 let updateState state =
     state
     |> updateTick
     |> updateCounter
     |> updateMisil
     |> updateEnemy
+    |> updateColision
     |> updateKeyboard
 
 let updateScreen state =
