@@ -28,6 +28,7 @@ type State = {
     Misiles: Misil list
     EnemyX: int
     EnemyY: int
+    EnemySpeed: float
 }
 
 let initSate() =
@@ -42,6 +43,7 @@ let initSate() =
         Misiles = [] 
         EnemyX = Console.BufferWidth-10
         EnemyY = 0
+        EnemySpeed = Math.PI/50.0
     }
 
 
@@ -156,7 +158,7 @@ let updateMisil state =
     { state with Misiles = nuevosMisiles}
 
 let updateEnemy state =
-    let nuevoY = abs (float state.Height/2.0*((Math.Cos state.Counter)-1.0))
+    let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed)-1.0)
     {state with EnemyY = int nuevoY}
 let updateState state =
     state
