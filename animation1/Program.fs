@@ -12,6 +12,11 @@ type ProgramState =
 | Running
 | Terminated
 
+type EnemyState =
+| Vivo
+| Colisionado
+| Dormido
+
 type Misil = {
     X: int
     Y: int
@@ -29,7 +34,8 @@ type State = {
     EnemyX: int
     EnemyY: int
     EnemySpeed: float
-    EnemyVisible: bool
+    EnemyState: EnemyState
+    ColisionTime: int
 }
 
 let initSate() =
@@ -45,7 +51,8 @@ let initSate() =
         EnemyX = Console.BufferWidth-10
         EnemyY = 0
         EnemySpeed = Math.PI/50.0
-        EnemyVisible = true
+        EnemyState = Vivo
+        ColisionTime = 0
     }
 
 
@@ -81,7 +88,7 @@ let displayMisil state =
     state
 
 let displayEnemy state =
-    if state.EnemyVisible then 
+    if state.EnemyState = Vivo then 
         displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
     state
 
@@ -126,7 +133,7 @@ let clearAlien state =
     state
 
 let clearEnemy state =
-    if state.EnemyVisible then 
+    if state.EnemyState = Vivo then 
         displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "  "
     state
 
@@ -162,17 +169,30 @@ let updateMisil state =
     { state with Misiles = nuevosMisiles}
 
 let updateEnemy state =
-    let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed) - 1.0)
-    {state with EnemyY = min (state.Height-1) (int nuevoY)}
+    if state.EnemyState = Vivo then
+        let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed) - 1.0)
+        {state with EnemyY = min (state.Height-1) (int nuevoY)}
+    else
+        state
 
 let updateColision state =
-    state.Misiles
-    |> List.filter (fun m -> not (m.X+1=state.EnemyX && m.Y=state.EnemyY))
-    |> fun nuevaLista ->
-        if nuevaLista.Length <> state.Misiles.Length then
-            {state with Misiles=nuevaLista;EnemyVisible=false}
+    match state.EnemyState with 
+    | Vivo ->
+        state.Misiles
+        |> List.filter (fun m -> not (m.X+1=state.EnemyX && m.Y=state.EnemyY))
+        |> fun nuevaLista ->
+            if nuevaLista.Length <> state.Misiles.Length then
+                {state with Misiles=nuevaLista;EnemyState=Colisionado}
+            else
+                state
+    | Colisionado -> 
+        {state with ColisionTime = state.Counter; EnemyState=Dormido} // la magia ocurre aqui
+    | Dormido ->
+        if state.Counter-state.ColisionTime >= 4 then
+            {state with EnemyState = Vivo}
         else
             state
+
 let updateState state =
     state
     |> updateTick
