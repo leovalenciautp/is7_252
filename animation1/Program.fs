@@ -79,6 +79,7 @@ let displayMisil state =
     state
 
 let displayEnemy state =
+    Console.WriteLine state.EnemyY
     displayMessage state.EnemyX state.EnemyY ConsoleColor.Yellow "👾"
     state
 
@@ -158,8 +159,8 @@ let updateMisil state =
     { state with Misiles = nuevosMisiles}
 
 let updateEnemy state =
-    let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed)-1.0)
-    {state with EnemyY = int nuevoY}
+    let nuevoY = - float state.Height/2.0*(Math.Cos (float state.Tick*state.EnemySpeed) - 1.0)
+    {state with EnemyY = min (state.Height-1) (int nuevoY)}
 let updateState state =
     state
     |> updateTick
