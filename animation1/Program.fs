@@ -81,12 +81,8 @@ let displayJustified x y color (mensaje:string) =
     let nuevaX = x - (mensaje.Length-1)
     displayMessage nuevaX y color mensaje
 
-
-
 let dormirUnMomento() =
     Thread.Sleep 40
-
-
 
 let displayAlien state =
     match state.AlienState with
