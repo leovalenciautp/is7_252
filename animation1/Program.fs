@@ -117,6 +117,10 @@ let displayScore state =
     state
 
 let displayLives state =
+    let vidas = [
+        for i in 1..state.AlienLives do
+            "❤️"
+    ]
     displayMessage (state.Width/2-10) 0 ConsoleColor.Yellow $"Lives: {state.AlienLives}"
 let updateAlienKeyboard key state =
     if state.AlienState = Vivo then
