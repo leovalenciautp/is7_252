@@ -10,26 +10,22 @@ type MenuState =
 | Active
 | Terminated
 
-type State = {
+type State<'c> = {
     MenuState: MenuState
     MenuX: int
     MenuY: int
-    Commands: (MenuCommand*string) list
+    Commands: ('c*string) list
     CursorX: int
     CursorIndex: int   
 }
 
-let initState() =
+let initState x y commands =
     {
         MenuState = Active
-        MenuX = 10
-        MenuY = 10
-        Commands = [
-            OpenFile,"Abrir Archivo"
-            SaveFile,"Guardar Archivo"
-            Exit,"Salir"
-        ]
-        CursorX = 8
+        MenuX = x
+        MenuY = y
+        Commands = commands
+        CursorX = x-2
         CursorIndex = 0
     }
 
@@ -76,8 +72,8 @@ let rec mainLoop oldState =
     else
         newState
 
-let mostrarMenu() =
-    initState()
+let mostrarMenu x y commands =
+    initState x y commands
     |> mainLoop
     |> fun state ->
         let choice = state.CursorIndex

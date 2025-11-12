@@ -7,7 +7,13 @@
     <Compile Include="Types.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="Menu.fs" />
+    <Compile Include="MenuA.fs" />
+    <Compile Include="MenuB.fs" />
+    <Compile Include="MenuC.fs" />
+    <Compile Include="MainMenu.fs" />
+    <Compile Include="PauseMenu.fs" />
     <Compile Include="MenuDos.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Navigator.fs" /><Compile Include="Program.fs" />
+    
   </ItemGroup>
 </Project>
