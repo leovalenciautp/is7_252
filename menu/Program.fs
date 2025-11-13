@@ -8,7 +8,7 @@
 module App.Main
 
 open System
-open App.Types
+
 Console.Clear()
 Console.CursorVisible <- false
 

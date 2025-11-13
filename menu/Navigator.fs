@@ -20,7 +20,9 @@ let initState() =
 
 let showMenuA state =
     Console.Clear()
-    let choice = MenuA.mostrarMenu 20 10
+    Utils.displayMessageGigante 0 0 ConsoleColor.Green "Alien"
+    Utils.displayMessageGigante 0 7 ConsoleColor.Red "Attack!"
+    let choice = MenuA.mostrarMenu 20 15
     match choice with 
     | MenuACommand.GoToB -> 
         {state with NavigatorState = ShowMenuB}
@@ -30,7 +32,8 @@ let showMenuA state =
 
 let showMenuB state =
     Console.Clear()
-    let choice = MenuB.mostrarMenu 20 10
+    Utils.displayMessageGigante 0 5 ConsoleColor.Red "Game Over"
+    let choice = MenuB.mostrarMenu 20 15
     match choice with 
     | MenuBCommand.GoToA -> 
         {state with NavigatorState = ShowMenuA}
@@ -43,7 +46,8 @@ let showMenuB state =
 
 let showMenuC state =
     Console.Clear()
-    let choice = MenuC.mostrarMenu 20 10
+    Utils.displayMessageGigante 0 5 ConsoleColor.Magenta "Paused"
+    let choice = MenuC.mostrarMenu 20 15
     match choice with 
     | MenuCCommand.GoToB -> 
         {state with NavigatorState = ShowMenuB}

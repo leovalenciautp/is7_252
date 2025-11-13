@@ -9,55 +9,13 @@ let displayMessage x y color (mensaje:string) =
     Console.ForegroundColor <- color
     Console.Write mensaje
 
-type Letra = {
-    Lineas: string array
-}
-
-//  ** 
-// *  *
-//*    *
-//******
-//*    *
-//*    *
-
-let letraA =
-    {
-        Lineas = [|
-            " ████ "
-            "█    █ "
-            "█    █"
-            "██████"
-            "█    █"
-            "█    █"
-        |]
-    }
-
-let letraB =
-    {
-        Lineas = [|
-            "█████ "
-            "█    █"
-            "█████"
-            "█    █"
-            "█    █"
-            "█████ "
-        |]
-    }
-
-
-let letras = [
-    'A',letraA
-    'B',letraB
-]
-
-let mapaDeLetras = letras |> Map.ofList
-
-
-let printLetra letra =
-    letra.Lineas 
-    |> Array.iteri ( fun i line -> displayMessage 10 (10+i) ConsoleColor.Red line )
+let printLetra x y color letra =
+    letra
+    |> Array.iteri ( fun i line -> displayMessage x (y+i) color line )
 
 let displayMessageGigante x y color (mensaje:string) =
-    mensaje
-    |> Seq.iter (fun c -> ())
+    mensaje.ToUpper()
+    |> Seq.map Letras.econtrarLetra
+    |> Seq.iteri (fun i letra -> printLetra (x+i*7) y color letra )
+
     
