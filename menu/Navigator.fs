@@ -4,9 +4,10 @@ open System
 open App.Types
 
 type NavigatorState =
-| ShowMenuA
-| ShowMenuB
-| ShowMenuC
+| ShowMainMenu
+| ShowGame
+| ShowPause
+| ShowGameOver
 | Terminated
 
 type State = {
@@ -15,52 +16,67 @@ type State = {
 
 let initState() =
     {
-        NavigatorState = ShowMenuA
+        NavigatorState = ShowMainMenu
     }
 
-let showMenuA state =
+
+let showMainMenu state =
     Console.Clear()
     Utils.displayMessageGigante 0 0 ConsoleColor.Green "Alien"
     Utils.displayMessageGigante 0 7 ConsoleColor.Red "Attack!"
-    let choice = MenuA.mostrarMenu 20 15
-    match choice with 
-    | MenuACommand.GoToB -> 
-        {state with NavigatorState = ShowMenuB}
+    match MainMenu.mostrarMenu 20 15 with
+    | GameCommand.NewGame ->
+        {state with NavigatorState=ShowGame}
+    | GameCommand.LoadGame ->
+        //
+        // La magia ocurre aqui para cargar
+        // un juego grabado en disco
+        //
+        {state with NavigatorState=ShowGame}
+    | GameCommand.Exit ->
+        {state with NavigatorState=Terminated}
 
-    | MenuACommand.Exit ->
-        { state with NavigatorState = Terminated}
+let showGame state =
+    Console.Clear()
+    Game.mostrarJuego()
+    {state with NavigatorState=ShowPause}
 
-let showMenuB state =
+let showGameOver state =
     Console.Clear()
     Utils.displayMessageGigante 0 5 ConsoleColor.Red "Game Over"
-    let choice = MenuB.mostrarMenu 20 15
-    match choice with 
-    | MenuBCommand.GoToA -> 
-        {state with NavigatorState = ShowMenuA}
+    match GameOver.mostrarMenu 10 15 with
+    | GameOverCommand.NewGame ->
+        {state with NavigatorState=ShowGame}
+    | GameOverCommand.Exit ->
+        { state with NavigatorState=Terminated}
 
-    | MenuBCommand.GoToC ->
-        {state with NavigatorState = ShowMenuC}
 
-    | MenuBCommand.Exit ->
-        { state with NavigatorState = Terminated}
-
-let showMenuC state =
+let showPause state =
     Console.Clear()
     Utils.displayMessageGigante 0 5 ConsoleColor.Magenta "Paused"
-    let choice = MenuC.mostrarMenu 20 15
-    match choice with 
-    | MenuCCommand.GoToB -> 
-        {state with NavigatorState = ShowMenuB}
+    match PauseMenu.mostrarMenu 10 15 with
+    | PauseCommand.ContinueGame ->
+        //
+        // Hay una magia aqui
+        //
+        {state with NavigatorState=ShowGame}
 
-    | MenuCCommand.Exit ->
-        { state with NavigatorState = Terminated}
+    | PauseCommand.SaveGame ->
+        //
+        // La magia ocurre aqui tambien
+        //
+        {state with NavigatorState=Terminated}
+    | PauseCommand.Exit ->
+        {state with NavigatorState=Terminated}
+
 
 
 let updateState state =
     match state.NavigatorState with
-    | ShowMenuA -> showMenuA state
-    | ShowMenuB -> showMenuB state
-    | ShowMenuC -> showMenuC state
+    | ShowMainMenu -> showMainMenu state
+    | ShowGame -> showGame state
+    | ShowPause -> showPause state
+    | ShowGameOver -> showGameOver state
     | _ -> state
 
 

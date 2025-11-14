@@ -5,7 +5,7 @@ open App.Types
 let mostrarMenu x y =
     [
         GameCommand.NewGame,"New Game"
-        GameCommand.ContinueGame,"Continue"
+        GameCommand.LoadGame,"Continue"
         GameCommand.Exit,"Exit"
     ]
     |> Menu.mostrarMenu x y

@@ -1,17 +1,9 @@
 module App.Types
 
-type ProgramStatus =
-| Running
-| Terminated
-
-type MenuCommand =
-| OpenFile
-| SaveFile
-| Exit
 
 type GameCommand =
 | NewGame
-| ContinueGame
+| LoadGame
 | Exit
 
 type PauseCommand =
@@ -19,25 +11,8 @@ type PauseCommand =
 | SaveGame
 | Exit
 
-type MenuACommand =
-| GoToB
-| Exit
-
-type MenuBCommand =
-| GoToA
-| GoToC
-| Exit
-
-type MenuCCommand =
-| GoToB
+type GameOverCommand=
+| NewGame
 | Exit
 
 
-type State = {
-    ProgramStatus: ProgramStatus
-}
-
-let initState() = 
-    {
-        ProgramStatus = Running
-    }
